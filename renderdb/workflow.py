@@ -328,16 +328,37 @@ def loras(api: dict) -> Tuple[List[dict], str]:
         # anyone adds -- the extension point would look present and never
         # fire.
         got: List[dict] = []
+        failed = False
         for predicate, reader in LORA_READERS:
             try:
-                if predicate(node):
-                    got = reader(nid, node) or []
+                matched = predicate(node)
             except Exception:
+                # A predicate that blows up says nothing about this node.
+                # Counting it as an unreadable LoRA would report partial on
+                # graphs holding none, which is correction 1 all over again.
+                continue
+            if not matched:
+                continue
+            try:
+                got = reader(nid, node) or []
+            except Exception:
+                # A reader claimed this shape and then crashed. That is a LoRA
+                # node this build cannot see, not the absence of one, and
+                # LORA_READERS is a documented extension point -- assume the
+                # readers are incomplete *and* that they break.
+                failed = True
                 got = []
             if got:
                 break
         if got:
             found.extend(got)
+            continue
+        if failed:
+            # Only a raise counts. A reader returning nothing may have found
+            # an empty node, which carries no LoRA -- that is correction 3,
+            # and calling it unreadable would undo it.
+            looks_lora += 1
+            unreadable += 1
             continue
 
         # Nothing read it. Did it nonetheless look like a LoRA node? That is

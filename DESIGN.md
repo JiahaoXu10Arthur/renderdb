@@ -76,6 +76,16 @@ lesson is not "add another reader". It is that the reader list should be
 assumed incomplete, which is why `lora_status` exists at all — and why the
 numbers in the README describe one corpus rather than claiming coverage.
 
+A fifth way to produce the same false clean does not need an unknown shape at
+all: a registered reader that *raises*. Its exception used to be swallowed and
+the node treated as one nothing had read, so unless the prefilter below
+happened to recognise the class name, a broken reader could return
+`no_lora_nodes` — the most confident answer there is, on the strength of a
+crash. A reader that raises is now counted unreadable. A reader that returns
+nothing still is not: it may have found an empty node, which is correction 3.
+A predicate that raises is not either, because it has said nothing about the
+node, and treating it as a LoRA would be correction 1.
+
 Notice also that three of the four were **false alarms on shapes that already
 worked**. A synthetic test cannot catch those, because you only write a
 synthetic case for a shape you already know about. That is what

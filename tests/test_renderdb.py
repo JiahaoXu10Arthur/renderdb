@@ -1,8 +1,11 @@
+import contextlib
 import json
 import struct
 import zlib
 
 import pytest
+
+from renderdb import workflow
 
 from renderdb import (build, compare_renders, connect, model_identity,
                       provenance, scan_one)
@@ -592,3 +595,54 @@ def test_a_render_with_no_text_chunk_is_skipped_not_crashed(tmp_path):
     p.write_bytes(_realistic_png([], idat_count=8))
     with pytest.raises(WorkflowError):
         scan_one(p)
+
+
+# --------------------------------------------- a reader that fails is not "none"
+
+@contextlib.contextmanager
+def _registered(predicate, reader):
+    workflow.LORA_READERS.insert(0, (predicate, reader))
+    try:
+        yield
+    finally:
+        workflow.LORA_READERS.pop(0)
+
+
+def _boom(*a, **k):
+    raise RuntimeError("this reader is broken")
+
+
+def test_a_reader_that_raises_is_unreadable_not_absent():
+    # A registered reader claimed the shape and then failed. Reporting
+    # no_lora_nodes there states "there are none here" on the strength of a
+    # crash -- the silent false clean this status column exists to prevent,
+    # arriving through the documented extension point rather than through an
+    # unknown shape.
+    api = {"1": {"class_type": "StackHolder", "inputs": {"items": ["x"]}}}
+    with _registered(lambda n: n.get("class_type") == "StackHolder", _boom):
+        entries, status = workflow.loras(api)
+    assert entries == []
+    assert status == workflow.UNSUPPORTED
+
+
+def test_a_predicate_that_raises_does_not_invent_a_lora_node():
+    # A predicate that blows up says nothing about the node. Counting it as an
+    # unreadable LoRA would report partial on graphs that hold none, which is
+    # the first of the four corrections all over again.
+    api = {"1": {"class_type": "SaveImage", "inputs": {"filename_prefix": "x"}}}
+    with _registered(_boom, _boom):
+        entries, status = workflow.loras(api)
+    assert entries == []
+    assert status == workflow.NONE
+
+
+def test_the_shipped_readers_raise_on_no_real_node():
+    # The fix above only preserves the corpus numbers in the README if none of
+    # the shipped readers currently crash. Locked in here rather than assumed.
+    for case in _real_cases():
+        for nid, node in case["workflow"].items():
+            if not isinstance(node, dict):
+                continue
+            for predicate, reader in workflow.LORA_READERS:
+                if predicate(node):
+                    reader(nid, node)
