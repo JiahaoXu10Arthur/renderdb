@@ -524,3 +524,71 @@ def test_every_real_lora_row_has_a_strength():
         got, status = loras(case["workflow"])
         if status == OK:
             assert all(e["strength_model"] is not None for e in got)
+
+
+# ------------------------------------------- the chunk layer real files have
+
+def _realistic_png(text_chunks, idat_count=5, idat_size=2048):
+    """A PNG shaped like the ones ComfyUI actually writes.
+
+    Measured over 400 real renders: IHDR, one or two `tEXt` chunks keyed
+    `prompt` and `workflow`, then several IDAT, then IEND -- 4 to 66 chunks a
+    file, text payloads from 731 bytes to 124 KB. The fixtures elsewhere in
+    this file start from a parsed graph and so never exercise the chunk
+    walker at all; the older synthetic PNGs had no IDAT and one small text
+    chunk, which is the easy case.
+
+    No pixels: the IDAT payloads are filler. The point is the arithmetic that
+    walks past them.
+    """
+    out = bytearray(b"\x89PNG\r\n\x1a\n")
+
+    def put(ctype, payload):
+        out.extend(struct.pack(">I", len(payload)))
+        out.extend(ctype + payload)
+        out.extend(struct.pack(">I", zlib.crc32(ctype + payload) & 0xFFFFFFFF))
+
+    put(b"IHDR", struct.pack(">IIBBBBB", 64, 64, 8, 2, 0, 0, 0))
+    for key, value in text_chunks:
+        put(b"tEXt", key.encode() + b"\x00" + value.encode())
+    for i in range(idat_count):
+        put(b"IDAT", bytes(idat_size))
+    put(b"IEND", b"")
+    return bytes(out)
+
+
+def test_the_prompt_chunk_is_found_past_many_idat(tmp_path):
+    p = tmp_path / "real.png"
+    p.write_bytes(_realistic_png([("prompt", json.dumps(wf(lora_nodes=NATIVE)))],
+                                 idat_count=30))
+    row = scan_one(p)
+    assert row["seed"] == 7
+    assert row["loras"][0]["strength_model"] == 0.8
+
+
+def test_workflow_chunk_present_but_prompt_wins(tmp_path):
+    """Real renders carry both. `workflow` is the editor's copy and can
+    differ from what ran; only `prompt` is authoritative."""
+    editor = json.dumps({"nodes": [{"id": 1, "type": "Decoy"}]})
+    p = tmp_path / "both.png"
+    p.write_bytes(_realistic_png([
+        ("workflow", editor),
+        ("prompt", json.dumps(wf(seed=4242))),
+    ]))
+    assert scan_one(p)["seed"] == 4242
+
+
+def test_a_large_text_chunk_parses(tmp_path):
+    """Real payloads reach 124 KB; the synthetic ones elsewhere are bytes."""
+    big = wf()
+    big["pad"] = {"class_type": "CR Text", "inputs": {"text": "x" * 120000}}
+    p = tmp_path / "big.png"
+    p.write_bytes(_realistic_png([("prompt", json.dumps(big))]))
+    assert len(read_workflow(p)) == len(big)
+
+
+def test_a_render_with_no_text_chunk_is_skipped_not_crashed(tmp_path):
+    p = tmp_path / "plain.png"
+    p.write_bytes(_realistic_png([], idat_count=8))
+    with pytest.raises(WorkflowError):
+        scan_one(p)
