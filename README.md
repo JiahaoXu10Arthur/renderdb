@@ -1,5 +1,7 @@
 # renderdb
 
+[![test](https://github.com/JiahaoXu10Arthur/renderdb/actions/workflows/test.yml/badge.svg)](https://github.com/JiahaoXu10Arthur/renderdb/actions/workflows/test.yml)
+
 Your ComfyUI output folder is already a complete experiment record. This makes
 it queryable.
 

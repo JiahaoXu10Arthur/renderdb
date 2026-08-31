@@ -16,6 +16,10 @@ classifiers = [
 ]
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/JiahaoXu10Arthur/renderdb"
+Issues = "https://github.com/JiahaoXu10Arthur/renderdb/issues"
+
 [project.optional-dependencies]
 test = ["pytest>=7"]
 
