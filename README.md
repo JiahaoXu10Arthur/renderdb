@@ -197,6 +197,9 @@ pip install .          # or -e ".[test]" to run the suite
 pytest -q
 ```
 
+See [DESIGN.md](DESIGN.md) for why it is shaped this way, what was
+rejected, and what to check before changing it.
+
 ## License
 
 MIT
