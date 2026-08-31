@@ -52,6 +52,18 @@ A LoRA whose strength arrives as a wired-in link or a string leaves the column
 `NULL`. Reporting `ok` would claim "name and strength recovered" about the one
 column this package exists for.
 
+## Decision: `build()` prunes, and prunes only what it owns
+
+`prune=True` is the default. A renamed or deleted file otherwise leaves its row
+behind and every count is quietly too high — an index reporting renders that do
+not exist is worse than one merely out of date, and it fails in the direction
+nobody checks, the same way an empty LoRA list does.
+
+The pruning is scoped: a row survives if its `path` is not under the root being
+built. One database can hold several roots, and indexing one of them must not
+delete another's rows. That makes the default safe to leave on, which is the
+only reason it can be the default.
+
 ## The four corrections, and what they cost
 
 Getting `lora_status` right took four passes, every one found by running over

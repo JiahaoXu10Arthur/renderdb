@@ -466,6 +466,23 @@ def test_build_prunes_a_renamed_file(tmp_path):
     c.close()
 
 
+def test_build_does_not_prune_rows_belonging_to_another_root(tmp_path):
+    """One database can index several folders. Pruning is scoped to the root
+    being built, which is the only reason prune=True is safe as a default."""
+    a, b = tmp_path / "a", tmp_path / "b"
+    a.mkdir()
+    b.mkdir()
+    _write(a / "one.png", wf())
+    _write(b / "two.png", wf(seed=2))
+    db = tmp_path / "db.sqlite"
+    build(a, db)
+    build(b, db)
+    c = connect(db)
+    files = sorted(r["file"] for r in c.execute("SELECT file FROM render"))
+    assert files == ["one.png", "two.png"]
+    c.close()
+
+
 def test_build_prunes_a_deleted_file(tmp_path):
     _write(tmp_path / "a.png", wf())
     _write(tmp_path / "b.png", wf(seed=2))
