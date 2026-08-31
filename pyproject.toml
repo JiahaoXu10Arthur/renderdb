@@ -1,0 +1,30 @@
+[project]
+name = "renderdb"
+version = "0.1.0"
+description = "Make a ComfyUI output folder queryable -- LoRA name and strength, seed, sampler, models -- from the workflow each PNG carries."
+readme = "README.md"
+authors = [{ name = "Jiahao Xu" }]
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["comfyui", "stable-diffusion", "lora", "sqlite", "metadata",
+            "provenance", "index"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Multimedia :: Graphics",
+  "Topic :: Database",
+]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+renderdb = "renderdb.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["renderdb"]
