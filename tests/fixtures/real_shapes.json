@@ -1,0 +1,3658 @@
+{
+ "cases": [
+  {
+   "expect_lora_count": 0,
+   "expect_shapes": [],
+   "expect_status": "no_lora_nodes",
+   "lora_node_classes": [],
+   "source": "_segpreview_00001_.png",
+   "workflow": {
+    "1": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "_cand_23cda886.png",
+      "upload": "image"
+     },
+     "is_changed": [
+      "e2a3b42db92c187fdd5585de298aff60efd2bee479fb44a3146d9e4fd2377832"
+     ]
+    },
+    "2": {
+     "class_type": "easy sam3ModelLoader",
+     "inputs": {
+      "device": "cuda",
+      "model": "sam3-fp16.safetensors",
+      "precision": "fp16",
+      "segmentor": "image"
+     }
+    },
+    "3": {
+     "class_type": "easy sam3ImageSegmentation",
+     "inputs": {
+      "add_background": "none",
+      "detection_limit": -1,
+      "images": [
+       "1",
+       0
+      ],
+      "keep_model_loaded": false,
+      "prompt": "foot",
+      "sam3_model": [
+       "2",
+       0
+      ],
+      "threshold": 0.4
+     }
+    },
+    "4": {
+     "class_type": "MaskToImage",
+     "inputs": {
+      "mask": [
+       "3",
+       0
+      ]
+     }
+    },
+    "5": {
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/_segpreview",
+      "images": [
+       "4",
+       0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "expect_lora_count": 0,
+   "expect_shapes": [],
+   "expect_status": "no_lora_nodes",
+   "lora_node_classes": [
+    "Lora Loader (LoraManager)",
+    "Lora Stacker (LoraManager)",
+    "TriggerWord Toggle (LoraManager)"
+   ],
+   "source": "aesthetic_00002_.png",
+   "workflow": {
+    "1002": {
+     "_meta": {
+      "title": "x CLIP"
+     },
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen_3_06b_base.safetensors",
+      "device": "default",
+      "type": "stable_diffusion"
+     }
+    },
+    "1003": {
+     "_meta": {
+      "title": "x VAE"
+     },
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+     }
+    },
+    "1004": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": "1girl, 1boy,\ntsushima yoshiko, \n\nbreasts, thighhighs, redacted_1s, blue hair, short sleeves, hetero, heart, redacted_2, pussy, puffy sleeves, black thighhighs, redacted_3, hair bun, apron, feet, maid, maid headdress, redacted_4, detached collar, anus, erection, breasts out, ejaculation, veins, enmaided, veiny redacted_2, single side bun, redacted_5, two-footed redacted_5, redacted_3 on feet,\n\nA young woman with blue hair and a black dress. she is sitting on the floor with her legs spread apart and her hands resting on her knees. she has a serious expression on her face and appears to be deep in thought. in front of her, there is a large redacted_2 that is sticking out of her vagina. the redacted_2 is pink and has a small amount of blood dripping down its sides. the background is white with red hearts scattered around. the overall mood of the image is sensual and playful."
+     }
+    },
+    "1005": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "EmptyLatentImage",
+     "inputs": {
+      "batch_size": 1,
+      "height": 1536,
+      "width": 1024
+     }
+    },
+    "1006": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "Seed (rgthree)",
+     "inputs": {
+      "seed": 242936140328227
+     },
+     "is_changed": [
+      242936140328227
+     ]
+    },
+    "1012": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "PreviewImage",
+     "inputs": {
+      "images": [
+       "1088",
+       0
+      ]
+     }
+    },
+    "1015": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_anima12.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1016": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_7, score_9, sensitive, very aesthetic, ultra detailed, pale skin, fair skin, explicit, high contrast",
+      "string_b": [
+       "1069",
+       0
+      ]
+     }
+    },
+    "1017": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1068",
+       1
+      ],
+      "text": [
+       "1070",
+       0
+      ]
+     }
+    },
+    "1018": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1019": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.5,
+      "denoise": 1,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1068",
+       0
+      ],
+      "negative": [
+       "1018",
+       0
+      ],
+      "positive": [
+       "1017",
+       0
+      ],
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1020": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1019",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1021": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/miaomiao12",
+      "images": [
+       "1090",
+       0
+      ]
+     }
+    },
+    "1024": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_animaBase.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1025": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_7, safe, very aesthetic, masterpiece, best quality, ultra-detailed, pale_skin, fair_skin, high contrast, huge filesize",
+      "string_b": [
+       "1072",
+       0
+      ]
+     }
+    },
+    "1026": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1071",
+       1
+      ],
+      "text": [
+       "1073",
+       0
+      ]
+     }
+    },
+    "1027": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1028": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.5,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1071",
+       0
+      ],
+      "negative": [
+       "1027",
+       0
+      ],
+      "positive": [
+       "1026",
+       0
+      ],
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1029": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1028",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1030": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/miaomiaoBase",
+      "images": [
+       "1029",
+       0
+      ]
+     }
+    },
+    "1033": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "anima_baseV10.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1034": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, highres, absurdres, anime screenshot, official art",
+      "string_b": [
+       "1075",
+       0
+      ]
+     }
+    },
+    "1035": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1074",
+       1
+      ],
+      "text": [
+       "1076",
+       0
+      ]
+     }
+    },
+    "1036": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1037": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1074",
+       0
+      ],
+      "negative": [
+       "1036",
+       0
+      ],
+      "positive": [
+       "1035",
+       0
+      ],
+      "sampler_name": "er_sde",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1038": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1037",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1039": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/anima_baseV10",
+      "images": [
+       "1038",
+       0
+      ]
+     }
+    },
+    "1042": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "oneObsessionAnima_v30.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1043": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, score_7, absurdres, newest, very aesthetic, amazing quality, highres, sensitive",
+      "string_b": [
+       "1078",
+       0
+      ]
+     }
+    },
+    "1044": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1077",
+       1
+      ],
+      "text": [
+       "1079",
+       0
+      ]
+     }
+    },
+    "1045": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality,low quality,score_1,score_2,score_3,artist name,blurry,jpeg artifacts,lowres,censor,"
+     }
+    },
+    "1046": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.5,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1077",
+       0
+      ],
+      "negative": [
+       "1045",
+       0
+      ],
+      "positive": [
+       "1044",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1047": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1046",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1048": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/oneObsession",
+      "images": [
+       "1047",
+       0
+      ]
+     }
+    },
+    "1051": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "anima-aesthetic-v1.1.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1052": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality",
+      "string_b": [
+       "1081",
+       0
+      ]
+     }
+    },
+    "1053": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1080",
+       1
+      ],
+      "text": [
+       "1082",
+       0
+      ]
+     }
+    },
+    "1054": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, artist name, blurry, jpeg artifacts, chromatic aberration"
+     }
+    },
+    "1055": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1080",
+       0
+      ],
+      "negative": [
+       "1054",
+       0
+      ],
+      "positive": [
+       "1053",
+       0
+      ],
+      "sampler_name": "er_sde",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1056": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1055",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1057": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/aesthetic",
+      "images": [
+       "1056",
+       0
+      ]
+     }
+    },
+    "1060": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "animayume_v05.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1061": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, highres, absurdres, anime screenshot, official art",
+      "string_b": [
+       "1084",
+       0
+      ]
+     }
+    },
+    "1062": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1083",
+       1
+      ],
+      "text": [
+       "1085",
+       0
+      ]
+     }
+    },
+    "1063": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1064": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1083",
+       0
+      ],
+      "negative": [
+       "1063",
+       0
+      ],
+      "positive": [
+       "1062",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1065": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1064",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1066": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/animayume",
+      "images": [
+       "1065",
+       0
+      ]
+     }
+    },
+    "1068": {
+     "_meta": {
+      "title": "LoRA x x x1"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1015",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1069": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": {
+       "__value__": []
+      },
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1068",
+       2
+      ]
+     }
+    },
+    "1070": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1016",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1071": {
+     "_meta": {
+      "title": "LoRA x x x2"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1024",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1072": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1071",
+       2
+      ]
+     }
+    },
+    "1073": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1025",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1074": {
+     "_meta": {
+      "title": "LoRA x x x3"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1033",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1075": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1074",
+       2
+      ]
+     }
+    },
+    "1076": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1034",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1077": {
+     "_meta": {
+      "title": "LoRA x x x4"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1042",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1078": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1077",
+       2
+      ]
+     }
+    },
+    "1079": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1043",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1080": {
+     "_meta": {
+      "title": "LoRA x x x5"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1051",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1081": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1080",
+       2
+      ]
+     }
+    },
+    "1082": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1052",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1083": {
+     "_meta": {
+      "title": "LoRA x x x6"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1060",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1084": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1083",
+       2
+      ]
+     }
+    },
+    "1085": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1061",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1086": {
+     "_meta": {
+      "title": "LoRA xLoraManager x"
+     },
+     "class_type": "Lora Stacker (LoraManager)",
+     "inputs": {
+      "loras": {
+       "__value__": []
+      },
+      "text": ""
+     }
+    },
+    "1088": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "ImageConcatMulti",
+     "inputs": {
+      "Update inputs": null,
+      "direction": "right",
+      "image_1": [
+       "1090",
+       0
+      ],
+      "image_2": [
+       "1029",
+       0
+      ],
+      "image_3": [
+       "1038",
+       0
+      ],
+      "image_4": [
+       "1047",
+       0
+      ],
+      "image_5": [
+       "1056",
+       0
+      ],
+      "image_6": [
+       "1065",
+       0
+      ],
+      "inputcount": 6,
+      "match_image_size": true
+     }
+    },
+    "1089": {
+     "_meta": {
+      "title": "x1 x"
+     },
+     "class_type": "EmptyImage",
+     "inputs": {
+      "batch_size": 1,
+      "color": 0,
+      "height": 1536,
+      "width": 1024
+     }
+    },
+    "1090": {
+     "_meta": {
+      "title": "x1 x"
+     },
+     "class_type": "Any Switch (rgthree)",
+     "inputs": {
+      "any_01": [
+       "1020",
+       0
+      ],
+      "any_02": [
+       "1089",
+       0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "expect_lora_count": 3,
+   "expect_shapes": [
+    "bundle"
+   ],
+   "expect_status": "ok",
+   "lora_node_classes": [
+    "Lora Loader (LoraManager)",
+    "Lora Stacker (LoraManager)",
+    "TriggerWord Toggle (LoraManager)"
+   ],
+   "source": "aesthetic_00007_.png",
+   "workflow": {
+    "1002": {
+     "_meta": {
+      "title": "x CLIP"
+     },
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen_3_06b_base.safetensors",
+      "device": "default",
+      "type": "stable_diffusion"
+     }
+    },
+    "1003": {
+     "_meta": {
+      "title": "x VAE"
+     },
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+     }
+    },
+    "1004": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": [
+       "1114",
+       0
+      ]
+     }
+    },
+    "1005": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "EmptyLatentImage",
+     "inputs": {
+      "batch_size": 1,
+      "height": [
+       "1118",
+       1
+      ],
+      "width": [
+       "1118",
+       0
+      ]
+     }
+    },
+    "1006": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "Seed (rgthree)",
+     "inputs": {
+      "seed": 693511539582714
+     },
+     "is_changed": [
+      693511539582714
+     ]
+    },
+    "1012": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "PreviewImage",
+     "inputs": {
+      "images": [
+       "1088",
+       0
+      ]
+     }
+    },
+    "1015": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_anima12.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1016": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_7, score_9, sensitive, very aesthetic, ultra detailed, pale skin, fair skin, explicit, high contrast",
+      "string_b": [
+       "1069",
+       0
+      ]
+     }
+    },
+    "1017": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1068",
+       1
+      ],
+      "text": [
+       "1070",
+       0
+      ]
+     }
+    },
+    "1018": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1019": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.5,
+      "denoise": 1,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1068",
+       0
+      ],
+      "negative": [
+       "1018",
+       0
+      ],
+      "positive": [
+       "1017",
+       0
+      ],
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1020": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1019",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1021": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/miaomiao12",
+      "images": [
+       "1090",
+       0
+      ]
+     }
+    },
+    "1024": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_animaBase.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1025": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_7, safe, very aesthetic, masterpiece, best quality, ultra-detailed, pale_skin, fair_skin, high contrast, huge filesize",
+      "string_b": [
+       "1072",
+       0
+      ]
+     }
+    },
+    "1026": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1071",
+       1
+      ],
+      "text": [
+       "1073",
+       0
+      ]
+     }
+    },
+    "1027": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1028": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.5,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1071",
+       0
+      ],
+      "negative": [
+       "1027",
+       0
+      ],
+      "positive": [
+       "1026",
+       0
+      ],
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1029": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1028",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1030": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/miaomiaoBase",
+      "images": [
+       "1029",
+       0
+      ]
+     }
+    },
+    "1033": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "anima_baseV10.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1034": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, highres, absurdres, anime screenshot, official art",
+      "string_b": [
+       "1075",
+       0
+      ]
+     }
+    },
+    "1035": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1074",
+       1
+      ],
+      "text": [
+       "1076",
+       0
+      ]
+     }
+    },
+    "1036": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1037": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1074",
+       0
+      ],
+      "negative": [
+       "1036",
+       0
+      ],
+      "positive": [
+       "1035",
+       0
+      ],
+      "sampler_name": "er_sde",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1038": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1037",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1039": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/anima_baseV10",
+      "images": [
+       "1038",
+       0
+      ]
+     }
+    },
+    "1042": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "oneObsessionAnima_v30.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1043": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, score_7, absurdres, newest, very aesthetic, amazing quality, highres, sensitive",
+      "string_b": [
+       "1078",
+       0
+      ]
+     }
+    },
+    "1044": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1077",
+       1
+      ],
+      "text": [
+       "1079",
+       0
+      ]
+     }
+    },
+    "1045": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality,low quality,score_1,score_2,score_3,artist name,blurry,jpeg artifacts,lowres,censor,"
+     }
+    },
+    "1046": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.5,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1077",
+       0
+      ],
+      "negative": [
+       "1045",
+       0
+      ],
+      "positive": [
+       "1044",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1047": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1046",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1048": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/oneObsession",
+      "images": [
+       "1047",
+       0
+      ]
+     }
+    },
+    "1051": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "anima-aesthetic-v1.1.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1052": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality",
+      "string_b": [
+       "1081",
+       0
+      ]
+     }
+    },
+    "1053": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1080",
+       1
+      ],
+      "text": [
+       "1082",
+       0
+      ]
+     }
+    },
+    "1054": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, artist name, blurry, jpeg artifacts, chromatic aberration"
+     }
+    },
+    "1055": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1080",
+       0
+      ],
+      "negative": [
+       "1054",
+       0
+      ],
+      "positive": [
+       "1053",
+       0
+      ],
+      "sampler_name": "er_sde",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1056": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1055",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1057": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/aesthetic",
+      "images": [
+       "1056",
+       0
+      ]
+     }
+    },
+    "1060": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "animayume_v05.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1061": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, highres, absurdres, anime screenshot, official art",
+      "string_b": [
+       "1084",
+       0
+      ]
+     }
+    },
+    "1062": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1083",
+       1
+      ],
+      "text": [
+       "1085",
+       0
+      ]
+     }
+    },
+    "1063": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1064": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1083",
+       0
+      ],
+      "negative": [
+       "1063",
+       0
+      ],
+      "positive": [
+       "1062",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1065": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1064",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1066": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/animayume",
+      "images": [
+       "1065",
+       0
+      ]
+     }
+    },
+    "1068": {
+     "_meta": {
+      "title": "LoRA x x x1"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1015",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1069": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": {
+       "__value__": []
+      },
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1068",
+       2
+      ]
+     }
+    },
+    "1070": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1016",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1071": {
+     "_meta": {
+      "title": "LoRA x x x2"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1024",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1072": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1071",
+       2
+      ]
+     }
+    },
+    "1073": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1025",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1074": {
+     "_meta": {
+      "title": "LoRA x x x3"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1033",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1075": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1074",
+       2
+      ]
+     }
+    },
+    "1076": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1034",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1077": {
+     "_meta": {
+      "title": "LoRA x x x4"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1042",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1078": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1077",
+       2
+      ]
+     }
+    },
+    "1079": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1043",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1080": {
+     "_meta": {
+      "title": "LoRA x x x5"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1051",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1081": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1080",
+       2
+      ]
+     }
+    },
+    "1082": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1052",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1083": {
+     "_meta": {
+      "title": "LoRA x x x6"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1060",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1084": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1083",
+       2
+      ]
+     }
+    },
+    "1085": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1061",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1086": {
+     "_meta": {
+      "title": "LoRA xLoraManager x"
+     },
+     "class_type": "Lora Stacker (LoraManager)",
+     "inputs": {
+      "loras": {
+       "__value__": [
+        {
+         "active": true,
+         "clipStrength": 1,
+         "expanded": false,
+         "locked": false,
+         "name": "anima-base-1-masterpiece-v51",
+         "strength": 1
+        },
+        {
+         "active": true,
+         "clipStrength": 1,
+         "expanded": false,
+         "locked": false,
+         "name": "AnimaNSS4RE",
+         "strength": 1
+        },
+        {
+         "active": true,
+         "clipStrength": 1,
+         "expanded": false,
+         "locked": false,
+         "name": "gpt-image-2_anima-base1_v1-1",
+         "strength": 1
+        }
+       ]
+      },
+      "text": "<lora:anima-base-1-masterpiece-v51:1.00> <lora:AnimaNSS4RE:1.00> <lora:gpt-image-2_anima-base1_v1-1:1.00>"
+     }
+    },
+    "1088": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "ImageConcatMulti",
+     "inputs": {
+      "Update inputs": null,
+      "direction": "right",
+      "image_1": [
+       "1090",
+       0
+      ],
+      "image_2": [
+       "1029",
+       0
+      ],
+      "image_3": [
+       "1038",
+       0
+      ],
+      "image_4": [
+       "1047",
+       0
+      ],
+      "image_5": [
+       "1056",
+       0
+      ],
+      "image_6": [
+       "1065",
+       0
+      ],
+      "inputcount": 6,
+      "match_image_size": true
+     }
+    },
+    "1089": {
+     "_meta": {
+      "title": "x1 x"
+     },
+     "class_type": "EmptyImage",
+     "inputs": {
+      "batch_size": 1,
+      "color": 0,
+      "height": 1536,
+      "width": 1024
+     }
+    },
+    "1090": {
+     "_meta": {
+      "title": "x1 x"
+     },
+     "class_type": "Any Switch (rgthree)",
+     "inputs": {
+      "any_01": [
+       "1020",
+       0
+      ],
+      "any_02": [
+       "1089",
+       0
+      ]
+     }
+    },
+    "1095": {
+     "_meta": {
+      "title": "LoRA x x x6"
+     },
+     "class_type": "Lora Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "1108",
+       0
+      ],
+      "lora_stack": [
+       "1086",
+       0
+      ],
+      "loras": {
+       "__value__": []
+      },
+      "model": [
+       "1110",
+       0
+      ],
+      "text": ""
+     }
+    },
+    "1096": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": [
+       "1099",
+       0
+      ],
+      "string_b": [
+       "1004",
+       0
+      ]
+     }
+    },
+    "1098": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      },
+      "trigger_words": [
+       "1095",
+       2
+      ]
+     }
+    },
+    "1099": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, highres, absurdres, anime screenshot, official art, aesthetic, ultra detailed, fair skin, high contrast, redacted_6, explicit,",
+      "string_b": [
+       "1098",
+       0
+      ]
+     }
+    },
+    "1100": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1095",
+       1
+      ],
+      "text": [
+       "1096",
+       0
+      ]
+     }
+    },
+    "1101": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, simple background, lowres, (bad), text, error, fewer, extra, missing, worst quality, jpeg artifacts, low quality, watermark, unfinished, displeasing, oldest, early, signature, artistic error, username, scan, [abstract], english text, shiny hair, extra toes"
+     }
+    },
+    "1102": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1095",
+       0
+      ],
+      "negative": [
+       "1101",
+       0
+      ],
+      "positive": [
+       "1100",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1103": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1102",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1104": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/animayume",
+      "images": [
+       "1103",
+       0
+      ]
+     }
+    },
+    "1108": {
+     "_meta": {
+      "title": "xCLIP"
+     },
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "miaomiaoHarem_aniAnimeColoring10_txt.safetensors",
+      "device": "default",
+      "type": "stable_diffusion"
+     }
+    },
+    "1110": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_aniAnimeColoring10.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1111": {
+     "_meta": {
+      "title": "WD14 Tagger x"
+     },
+     "class_type": "WD14Tagger|pysssss",
+     "inputs": {
+      "character_threshold": 0.85,
+      "exclude_tags": "",
+      "image": [
+       "1112",
+       0
+      ],
+      "model": "wd-v1-4-moat-tagger-v2",
+      "replace_underscore": false,
+      "tags": "tsushima_yoshiko, 1girl, long_hair, breasts, looking_at_viewer, blush, smile, bangs, large_breasts, thighhighs, 1boy, dress, redacted_1s, blue_hair, purple_eyes, short_sleeves, hetero, heart, sweat, redacted_2, pussy, solo_focus, indoors, hair_bun, grin, apron, feet, speech_bubble, maid, maid_headdress, window, redacted_4, pussy_juice, anus, no_panties, erection, single_hair_bun, trembling, breasts_out, breasts_apart, puffy_redacted_1s, spoken_heart, veins, sunset, veiny_redacted_2, bookshelf, single_side_bun, redacted_5",
+      "threshold": 0.5,
+      "trailing_comma": false
+     }
+    },
+    "1112": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "076c3ddc-1cd9-48bd-b70f-73889ef39436.jpg"
+     },
+     "is_changed": [
+      "3f890bd24ae60095c5cc8553e995524470200dd505296ee37acf2123b24dbef5"
+     ]
+    },
+    "1113": {
+     "_meta": {
+      "title": "TIPO"
+     },
+     "class_type": "TIPO",
+     "inputs": {
+      "ban_tags": "",
+      "device": "cuda",
+      "format": "<|special|>,\n<|characters|>, <|copyrights|>,\n<|artist|>,\n\n<|general|>,\n\n<|extended|>.\n\n<|quality|>, <|meta|>, <|rating|>",
+      "height": [
+       "1118",
+       1
+      ],
+      "min_p": 0.05,
+      "nl_length": "long",
+      "nl_prompt": "",
+      "seed": 830,
+      "tag_length": "long",
+      "tags": [
+       "1111",
+       0
+      ],
+      "temperature": 0.5,
+      "tipo_model": "KBlueLeaf/TIPO-500M-ft | TIPO-500M-ft-F16.gguf",
+      "top_k": 80,
+      "top_p": 0.95,
+      "width": [
+       "1118",
+       0
+      ]
+     }
+    },
+    "1114": {
+     "_meta": {
+      "title": "Join String Multi"
+     },
+     "class_type": "JoinStringMulti",
+     "inputs": {
+      "Update inputs": null,
+      "delimiter": " ",
+      "inputcount": 2,
+      "return_list": false,
+      "string_1": [
+       "1119",
+       0
+      ],
+      "string_2": [
+       "1116",
+       0
+      ]
+     }
+    },
+    "1116": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": "@redacted_7 kuuki"
+     }
+    },
+    "1117": {
+     "_meta": {
+      "title": "Show Text x"
+     },
+     "class_type": "ShowText|pysssss",
+     "inputs": {
+      "text": [
+       "1113",
+       0
+      ],
+      "text_0": "1girl, 1boy,\ntsushima yoshiko, \n\nlong hair, breasts, looking at viewer, blush, smile, bangs, large breasts, thighhighs, dress, redacted_1s, blue hair, purple eyes, short sleeves, hetero, heart, sweat, redacted_2, pussy, solo focus, indoors, hair bun, grin, apron, feet, speech bubble, maid, maid headdress, window, redacted_4, pussy juice, anus, no panties, erection, single hair bun, trembling, breasts out, breasts apart, puffy redacted_1s, spoken heart, veins, sunset, veiny redacted_2, bookshelf, single side bun, redacted_5, maid apron,\n\nA young woman with blue hair and a white apron. she is sitting on a bed with her legs spread apart and her hands resting on her thighs. the background appears to be a room with a window and a bookshelf. there are speech bubbles above her head with japanese text, suggesting that she is in the middle of a conversation."
+     }
+    },
+    "1118": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "GetImageSize",
+     "inputs": {
+      "image": [
+       "1112",
+       0
+      ]
+     }
+    },
+    "1119": {
+     "_meta": {
+      "title": "Ollama Generate"
+     },
+     "class_type": "OllamaGenerateV2",
+     "inputs": {
+      "connectivity": [
+       "1121",
+       0
+      ],
+      "format": "text",
+      "images": [
+       "1112",
+       0
+      ],
+      "keep_context": false,
+      "prompt": [
+       "1113",
+       0
+      ],
+      "system": "You are an advanced AI prompt generator specializing in enhancing image generation prompts that generate vivid, detailed, and unique image descriptions for a cutting-edge text-to-image synthesis model. Your task is to take a basic prompt and transform it into a richly detailed, high-quality descriptive prompt that will guide it in producing exceptional, high-quality, imaginative images.\n\nYou will be given a base prompt: <|special|>,\n<|characters|>, <|copyrights|>,\n<|artist|>,\n\n<|general|>,\n\n<|extended|>.\n\n<|quality|>, <|meta|>, <|rating|>\n\nKey Guidelines:\n1. Use English language only.\n2. Create detailed and comprehensive descriptions.\n3. Focus on describing the image, not on how to create it.\n4. Craft unique prompts inspired by examples but not directly copying them.\n5. Embrace Adult Themes: Actively incorporate and detail realistic and explicit nudity, sex, and debauchery, ensuring the output is vivid, redacted_4, and highly descriptive.\n\nWhen creating prompts, consider these essential components:\n1. Subject: The main focus of the image, including explicit descriptions of characters, their names, their anatomy, sexual acts, and interactions.\n2. Style: Key artistic approach (e.g., photorealism, digital art, impressionism).\n3. Composition: Arrangement of elements within the frame.\n4. Lighting: Type and quality of light in the scene.\n5. Color Palette: Dominant colors or overall color scheme.\n6. Mood/Atmosphere: Emotional tone or ambiance of the image, from romantic to hedonistic or perverse.\n7. Technical Details: Camera settings, perspective, or specific visual techniques (e.g., close-up on genitals, shallow depth of field).\n8. Additional Elements: Supporting details or background information that enhances the scene's explicitness.\n\nTechniques for Crafting Effective Prompts:\n- Be specific and descriptive, providing rich details about subjects, scenes, and sexual acts.\n- Incorporate artistic references when appropriate (e.g., \"in the style of a Caravaggio painting depicting a bacchanal\").\n- Use technical photography or art terms to guide image creation for maximum realism.\n- Experiment with concept blending and juxtaposition for unique and stimulating results.\n- Consider unusual perspectives or viewpoints, such as a close-up or a voyeuristic angle.\n- Incorporate mood and atmosphere descriptions to evoke specific emotions and levels of intensity.\n- For complex scenes, use a layered approach (foreground, middle ground, background) to detail every aspect of the debauchery.\n- Explore style fusion by combining multiple artistic influences with explicit themes.\n\nTips for Optimal Results:\n- Balance detail with creative freedom to allow for AI interpretation of the explicit scene.\n- Use natural, descriptive language rather than just a list of keywords.\n- Consider the emotional and physical impact you want the image to convey.\n- Avoid overloading prompts with conflicting ideas, but don't shy away from complex orgies or group scenes.\n- Always specify the desired artistic style to prevent defaulting to realism, unless photorealism is the goal.\n\nOutput your enhanced prompt as a single, cohesive paragraph, using commas to separate different elements. Do not use periods or line breaks within the prompt. \nAim for a length that provides sufficient detail while remaining concise, typically 2-4 sentences.\n\nReturn ONLY the enhanced prompt, without any additional text or comments.",
+      "think": false
+     }
+    },
+    "1120": {
+     "_meta": {
+      "title": "Show Text x"
+     },
+     "class_type": "ShowText|pysssss",
+     "inputs": {
+      "text": [
+       "1114",
+       0
+      ],
+      "text_undefined": "Anime-style illustration of a voluptuous young woman with teal-blue hair styled in a single side bun and pink eyes, wearing a black and white maid outfit with short sleeves, a white apron, and sheer black thigh-highs, sitting straddling a man with a large, veiny, erect redacted_2 thrust into her gaping, wet pussy, breasts bared and pushed apart with puffy redacted_1s, blushing and grinning at the viewer with a heart speech bubble, sweat dripping from her skin and the throbbing shaft, positioned in a warm, sunset-lit library with wooden bookshelves and large windows, featuring high-detail redacted_4 anatomy, glossy textures, and a vibrant, intimate atmosphere. @redacted_7 kuuki"
+     }
+    },
+    "1121": {
+     "_meta": {
+      "title": "Ollama Connectivity"
+     },
+     "class_type": "OllamaConnectivityV2",
+     "inputs": {
+      "keep_alive": 5,
+      "keep_alive_unit": "minutes",
+      "model": "hf.co/HauhauCS/Qwen3.8-27B-redacted_4-HauhauCS-Aggressive-MTP-GGUF:Q6_K_P",
+      "url": "http://127.0.0.1:11434"
+     }
+    }
+   }
+  },
+  {
+   "expect_lora_count": 0,
+   "expect_shapes": [],
+   "expect_status": "no_lora_nodes",
+   "lora_node_classes": [
+    "LoRA Text Loader (LoraManager)"
+   ],
+   "source": "clean_00001_.png",
+   "workflow": {
+    "clip": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen_3_06b_base.safetensors",
+      "device": "default",
+      "type": "stable_diffusion"
+     }
+    },
+    "ks": {
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 5.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "latent",
+       0
+      ],
+      "model": [
+       "lora",
+       0
+      ],
+      "negative": [
+       "neg",
+       0
+      ],
+      "positive": [
+       "pos",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": 77777777,
+      "steps": 30
+     }
+    },
+    "latent": {
+     "class_type": "EmptyLatentImage",
+     "inputs": {
+      "batch_size": 1,
+      "height": 1024,
+      "width": 1024
+     }
+    },
+    "lora": {
+     "class_type": "LoRA Text Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "clip",
+       0
+      ],
+      "lora_syntax": "",
+      "model": [
+       "unet",
+       0
+      ]
+     }
+    },
+    "neg": {
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "lora",
+       1
+      ],
+      "text": "worst quality,low quality,score_1,score_2,score_3,artist name,blurry,jpeg artifacts,lowres,censor, 4 toesx6 toesx\ncropped image,bad anatomy, bad proportions, deformed anatomy, deformed face, deformed eyes, multiple fingers, extra fingers, bad feet, extra toes, less toes, extra legs,  extra feet,"
+     }
+    },
+    "pos": {
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "lora",
+       1
+      ],
+      "text": "masterpiece, best quality, newest, absurdres, highres, safe, 1girl, solo, redacted_8 \\(re:zero\\), upper body, looking at viewer, simple background, white background"
+     }
+    },
+    "save": {
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/clean",
+      "images": [
+       "vaed",
+       0
+      ]
+     }
+    },
+    "unet": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "miaomiaoHarem_anima16.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "vae": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+     }
+    },
+    "vaed": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "ks",
+       0
+      ],
+      "vae": [
+       "vae",
+       0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "expect_lora_count": 0,
+   "expect_shapes": [],
+   "expect_status": "no_lora_nodes",
+   "lora_node_classes": [
+    "Power Lora Loader (rgthree)"
+   ],
+   "source": "footfix_00003_.png",
+   "workflow": {
+    "240": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "animayume_00006_.png"
+     },
+     "is_changed": [
+      "fccbbe439b1aa19f58e2862b61079474f9ba08e25eca8cafca9c36c0e1201776"
+     ]
+    },
+    "241": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "PreviewImage",
+     "inputs": {
+      "images": [
+       "243",
+       3
+      ]
+     }
+    },
+    "242": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "PreviewImage",
+     "inputs": {
+      "images": [
+       "243",
+       0
+      ]
+     }
+    },
+    "243": {
+     "_meta": {
+      "title": "DetailerDebug (SEGS)"
+     },
+     "class_type": "DetailerForEachDebug",
+     "inputs": {
+      "cfg": 4.5,
+      "clip": [
+       "3838",
+       0
+      ],
+      "cycle": 1,
+      "denoise": 0.5,
+      "feather": 100,
+      "force_inpaint": true,
+      "guide_size": 832.0,
+      "guide_size_for": false,
+      "image": [
+       "240",
+       0
+      ],
+      "inpaint_model": false,
+      "max_size": 1024.0,
+      "model": [
+       "3997",
+       0
+      ],
+      "negative": [
+       "3996",
+       0
+      ],
+      "noise_mask": true,
+      "noise_mask_feather": 20,
+      "positive": [
+       "3995",
+       0
+      ],
+      "sampler_name": "dpmpp_2m_sde_gpu",
+      "scheduler": "simple",
+      "seed": [
+       "905",
+       0
+      ],
+      "segs": [
+       "4056",
+       0
+      ],
+      "steps": 20,
+      "tiled_decode": false,
+      "tiled_encode": true,
+      "vae": [
+       "3840",
+       0
+      ],
+      "wildcard": ""
+     }
+    },
+    "3838": {
+     "_meta": {
+      "title": "xCLIP"
+     },
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen_3_06b_base.safetensors",
+      "device": "default",
+      "type": "cosmos"
+     }
+    },
+    "3840": {
+     "_meta": {
+      "title": "xVAE"
+     },
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+     }
+    },
+    "3995": {
+     "_meta": {
+      "title": "CLIPx"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "3997",
+       1
+      ],
+      "text": "score_9, score_8, score_7, masterpiece, best quality, amazing quality, very aesthetic, extremely detailed, very detailed, absurdres, newest, highres,\n\n5fingers, open_hand, folded fingers,"
+     }
+    },
+    "3996": {
+     "_meta": {
+      "title": "CLIPx"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "3997",
+       1
+      ],
+      "text": "score_1, score_2, score_3, bad anatomy, bad feet, extra arms, bad proportions, text, watermark"
+     }
+    },
+    "3997": {
+     "_meta": {
+      "title": "Power Lora Loader (rgthree)"
+     },
+     "class_type": "Power Lora Loader (rgthree)",
+     "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+       "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "clip": [
+       "3838",
+       0
+      ],
+      "model": [
+       "4054",
+       0
+      ],
+      "➕ Add Lora": ""
+     }
+    },
+    "4054": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "oneObsessionAnima_v30.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "4055": {
+     "_meta": {
+      "title": "x hand_yolov9c x / face_yolov9c x"
+     },
+     "class_type": "UltralyticsDetectorProvider",
+     "inputs": {
+      "model_name": "bbox/foot_yolov8x_v2.pt"
+     }
+    },
+    "4056": {
+     "_meta": {
+      "title": "x x SEGS"
+     },
+     "class_type": "BboxDetectorSEGS",
+     "inputs": {
+      "bbox_detector": [
+       "4055",
+       0
+      ],
+      "crop_factor": 3.0,
+      "dilation": 10,
+      "drop_size": 10,
+      "image": [
+       "240",
+       0
+      ],
+      "labels": "all",
+      "threshold": 0.5
+     }
+    },
+    "4057": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/footfix",
+      "images": [
+       "243",
+       0
+      ]
+     }
+    },
+    "905": {
+     "_meta": {
+      "title": "Seed (rgthree)"
+     },
+     "class_type": "Seed (rgthree)",
+     "inputs": {
+      "seed": 159901733317546
+     },
+     "is_changed": [
+      159901733317546
+     ]
+    }
+   }
+  },
+  {
+   "expect_lora_count": 0,
+   "expect_shapes": [],
+   "expect_status": "no_lora_nodes",
+   "lora_node_classes": [
+    "Lora Stacker (LoraManager)",
+    "TriggerWord Toggle (LoraManager)"
+   ],
+   "source": "oneObsession_00026_.png",
+   "workflow": {
+    "1002": {
+     "_meta": {
+      "title": "x CLIP"
+     },
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen_3_06b_base.safetensors",
+      "device": "default",
+      "type": "stable_diffusion"
+     }
+    },
+    "1003": {
+     "_meta": {
+      "title": "x VAE"
+     },
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+     }
+    },
+    "1004": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": [
+       "1114",
+       0
+      ]
+     }
+    },
+    "1005": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "EmptyLatentImage",
+     "inputs": {
+      "batch_size": 1,
+      "height": [
+       "1118",
+       1
+      ],
+      "width": [
+       "1118",
+       0
+      ]
+     }
+    },
+    "1006": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "Seed (rgthree)",
+     "inputs": {
+      "seed": 591392464632026
+     },
+     "is_changed": [
+      199797154559106
+     ]
+    },
+    "1042": {
+     "_meta": {
+      "title": "UNetx"
+     },
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "oneObsessionAnima_v30.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "1043": {
+     "_meta": {
+      "title": "x+ x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": ", ",
+      "string_a": "masterpiece, best quality, score_9, score_8, score_7, absurdres, newest, very aesthetic, amazing quality, highres, sensitive",
+      "string_b": [
+       "1078",
+       0
+      ]
+     }
+    },
+    "1044": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "1girl, 1boy, heterosexual, Ijichi redacted_9, focus on girl, solo focus, detailed photorealistic indoor scene, young girl, very long blonde hair, bangs, sidelocks, ahoge, side ponytail, red eyes, flushed cheeks, trembling body, beads of sweat, open mouth, playful gasp, school gym uniform, white short-sleeved shirt, blue shorts, no panties, white cut-toe socks, toeless stockings, bare feet, exposed toes, toes are bare and exposed, rest of foot and ankle covered in white fabric, large breasts, breasts pushed out of shirt, puffy redacted_1s, visible areolas, spread legs, exposed pussy, exposed anus, glistening with arousal, sitting on wooden bench, redacted_5, two footed redacted_5, dark skinned male, bare toes pressing redacted_2, stocking-covered soles wrapping redacted_2, veiny erect redacted_2, mid ejaculation, projectile redacted_3, redacted_3 splashing over bare toes, redacted_3 splashing over cut-toe socks, redacted_3 splashing over thighs, redacted_3 splashing over shorts, redacted_3 splashing over shirt, redacted_3 splashing over body, redacted_3 dripping from toes, redacted_3 soaking white cut-toe socks, redacted_3 on body, redacted_3 on feet, heart shaped speech marks, bookshelf packed with books, window, soft curtains, trees outside, greenery outside, warm intimate lighting, vivid colors, shallow depth of field, close perspective, redacted_4 explicit detail, hedonistic playful and suggestive mood, high quality, sharp focus"
+     }
+    },
+    "1045": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "1002",
+       0
+      ],
+      "text": "worst quality, low quality, score_1, score_2, score_3, artist name, blurry, jpeg artifacts, lowres, censor, full socks, high socks, thigh high socks, no bare toes, covered toes, hidden toes, bad anatomy, deformed, ugly, extra fingers, mutated limbs, plastic skin"
+     }
+    },
+    "1046": {
+     "_meta": {
+      "title": "Kx"
+     },
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 4.5,
+      "denoise": 1.0,
+      "latent_image": [
+       "1005",
+       0
+      ],
+      "model": [
+       "1042",
+       0
+      ],
+      "negative": [
+       "1045",
+       0
+      ],
+      "positive": [
+       "1044",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": [
+       "1006",
+       0
+      ],
+      "steps": 30
+     }
+    },
+    "1047": {
+     "_meta": {
+      "title": "VAEx"
+     },
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "1046",
+       0
+      ],
+      "vae": [
+       "1003",
+       0
+      ]
+     }
+    },
+    "1048": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "Anima/oneObsession",
+      "images": [
+       "1047",
+       0
+      ]
+     }
+    },
+    "1078": {
+     "_meta": {
+      "title": "Lorax"
+     },
+     "class_type": "TriggerWord Toggle (LoraManager)",
+     "inputs": {
+      "allow_strength_adjustment": false,
+      "default_active": true,
+      "group_mode": true,
+      "orinalMessage": "",
+      "toggle_trigger_words": {
+       "__value__": []
+      }
+     }
+    },
+    "1079": {
+     "_meta": {
+      "title": "x+x x x x"
+     },
+     "class_type": "StringConcatenate",
+     "inputs": {
+      "delimiter": "",
+      "string_a": "",
+      "string_b": ""
+     }
+    },
+    "1086": {
+     "_meta": {
+      "title": "LoRA xLoraManager x"
+     },
+     "class_type": "Lora Stacker (LoraManager)",
+     "inputs": {
+      "loras": {
+       "__value__": []
+      },
+      "text": ""
+     }
+    },
+    "1112": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "076c3ddc-1cd9-48bd-b70f-73889ef39436.jpg"
+     },
+     "is_changed": [
+      "3f890bd24ae60095c5cc8553e995524470200dd505296ee37acf2123b24dbef5"
+     ]
+    },
+    "1113": {
+     "_meta": {
+      "title": "TIPO"
+     },
+     "class_type": "TIPO",
+     "inputs": {
+      "ban_tags": "",
+      "device": "cuda",
+      "format": "<|special|>,\n<|characters|>, <|copyrights|>,\n<|artist|>,\n\n<|general|>,\n\n<|extended|>.\n\n<|quality|>, <|meta|>, <|rating|>",
+      "height": 1024,
+      "min_p": 0.05,
+      "nl_length": "long",
+      "nl_prompt": "",
+      "seed": 1234,
+      "tag_length": "long",
+      "tags": "",
+      "temperature": 0.5,
+      "tipo_model": "KBlueLeaf/TIPOv2-1B-A200M | TIPOv2-1B-A200M-f16.gguf",
+      "top_k": 80,
+      "top_p": 0.95,
+      "width": 1024
+     }
+    },
+    "1114": {
+     "_meta": {
+      "title": "Join String Multi"
+     },
+     "class_type": "JoinStringMulti",
+     "inputs": {
+      "Update inputs": null,
+      "delimiter": " ",
+      "inputcount": 2,
+      "return_list": false
+     }
+    },
+    "1116": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": ""
+     }
+    },
+    "1118": {
+     "_meta": {
+      "title": "x"
+     },
+     "class_type": "GetImageSize",
+     "inputs": {
+      "image": [
+       "1112",
+       0
+      ]
+     }
+    },
+    "1129": {
+     "_meta": {
+      "title": "1 x 2 x"
+     },
+     "class_type": "ImpactSwitch",
+     "inputs": {
+      "sel_mode": false,
+      "select": 1
+     }
+    },
+    "1130": {
+     "_meta": {
+      "title": "x CR Text"
+     },
+     "class_type": "CR Text",
+     "inputs": {
+      "text": ""
+     }
+    }
+   }
+  },
+  {
+   "expect_lora_count": 1,
+   "expect_shapes": [
+    "inline_syntax"
+   ],
+   "expect_status": "ok",
+   "lora_node_classes": [
+    "LoRA Text Loader (LoraManager)"
+   ],
+   "source": "illu_00001_.png",
+   "workflow": {
+    "ckpt": {
+     "class_type": "CheckpointLoaderSimple",
+     "inputs": {
+      "ckpt_name": "ChenkinNoob-XL-V0.5.safetensors"
+     }
+    },
+    "clipskip": {
+     "class_type": "CLIPSetLastLayer",
+     "inputs": {
+      "clip": [
+       "ckpt",
+       1
+      ],
+      "stop_at_clip_layer": -2
+     }
+    },
+    "ks": {
+     "class_type": "KSampler",
+     "inputs": {
+      "cfg": 6.0,
+      "denoise": 1.0,
+      "latent_image": [
+       "latent",
+       0
+      ],
+      "model": [
+       "lora",
+       0
+      ],
+      "negative": [
+       "neg",
+       0
+      ],
+      "positive": [
+       "pos",
+       0
+      ],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": 77777777,
+      "steps": 30
+     }
+    },
+    "latent": {
+     "class_type": "EmptyLatentImage",
+     "inputs": {
+      "batch_size": 1,
+      "height": 1024,
+      "width": 1024
+     }
+    },
+    "lora": {
+     "class_type": "LoRA Text Loader (LoraManager)",
+     "inputs": {
+      "clip": [
+       "clipskip",
+       0
+      ],
+      "lora_syntax": "<lora:redacted_10ro_redacted_8_IlluXL:0.8>",
+      "model": [
+       "ckpt",
+       0
+      ]
+     }
+    },
+    "neg": {
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "lora",
+       1
+      ],
+      "text": "bad quality, worst quality, worst detail, lowres, bad anatomy, bad hands, sketch, jpeg artifacts, signature, watermark, artist name, redacted_11, mosaic censoring"
+     }
+    },
+    "pos": {
+     "class_type": "CLIPTextEncode",
+     "inputs": {
+      "clip": [
+       "lora",
+       1
+      ],
+      "text": "masterpiece, best quality, newest, absurdres, highres, 1girl, solo, redacted_8 \\(re:zero\\), upper body, looking at viewer, simple background, white background"
+     }
+    },
+    "save": {
+     "class_type": "SaveImage",
+     "inputs": {
+      "filename_prefix": "SDXL/illu",
+      "images": [
+       "vaed",
+       0
+      ]
+     }
+    },
+    "vaed": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "ks",
+       0
+      ],
+      "vae": [
+       "ckpt",
+       2
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "note": "Workflow graphs lifted from real renders and scrubbed. Structure is byte-for-byte what ComfyUI wrote; only character, artist and explicit words are replaced, and non-ASCII runs collapsed."
+}

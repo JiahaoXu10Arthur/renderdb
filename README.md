@@ -27,7 +27,7 @@ $ renderdb diff a.png b.png
   2 changes
 ```
 
-No dependencies, stdlib only. 41 tests, CI on Python 3.9, 3.11 and 3.13.
+No dependencies, stdlib only. 57 tests, CI on Python 3.9, 3.11 and 3.13.
 
 ## The one field that is actually missing elsewhere
 
@@ -90,6 +90,13 @@ workflow.LORA_READERS.insert(0, (my_predicate, my_reader))
 ```
 
 An unrecognised shape is recorded as unresolved. It is never guessed at.
+
+`tests/fixtures/real_shapes.json` holds seven graphs lifted from real renders —
+structure byte-for-byte as ComfyUI wrote it, names scrubbed — covering every
+LoRA node class the corpus contains, including an empty Power Lora Loader and
+the inline-syntax loader. They exist because a synthetic fixture can show that
+a new reader handles a new shape and can never show that it left the old ones
+alone, which is how three of the four corrections below became necessary.
 
 ## Refuse per field, not per row
 

@@ -473,3 +473,54 @@ def test_build_prunes_a_deleted_file(tmp_path):
     c = connect(db)
     assert c.execute("SELECT COUNT(*) FROM render").fetchone()[0] == 1
     c.close()
+
+
+# ------------------------------------------------- regression on real shapes
+
+def _real_cases():
+    import pathlib
+    f = pathlib.Path(__file__).parent / "fixtures" / "real_shapes.json"
+    return json.loads(f.read_text(encoding="utf-8"))["cases"]
+
+
+def test_real_workflow_fixtures_exist():
+    """Synthetic fixtures prove a reader handles a shape it was written for.
+    They cannot prove it does not misread the shapes that already worked --
+    which is how three of the four lora_status corrections were needed. These
+    graphs are what ComfyUI actually wrote, structure untouched, with only
+    names and explicit words scrubbed."""
+    cases = _real_cases()
+    assert len(cases) >= 7
+    shapes = {s for c in cases for s in c["expect_shapes"]}
+    assert {"bundle", "inline_syntax"} <= shapes
+    classes = {k for c in cases for k in c["lora_node_classes"]}
+    assert "Power Lora Loader (rgthree)" in classes
+    assert "LoRA Text Loader (LoraManager)" in classes
+
+
+@pytest.mark.parametrize("case", _real_cases(),
+                         ids=lambda c: c["source"])
+def test_real_workflow_status_does_not_drift(case):
+    """The regression the synthetic suite structurally cannot catch: a new
+    reader that quietly reclassifies graphs that were already right."""
+    got, status = loras(case["workflow"])
+    assert status == case["expect_status"]
+    assert len(got) == case["expect_lora_count"]
+    assert sorted({e["shape"] for e in got}) == case["expect_shapes"]
+
+
+@pytest.mark.parametrize("case", _real_cases(),
+                         ids=lambda c: c["source"])
+def test_real_workflows_scan_without_error(case):
+    from renderdb.workflow import fingerprint, models, sampler_settings
+    assert fingerprint(case["workflow"])
+    sampler_settings(case["workflow"])
+    models(case["workflow"])
+
+
+def test_every_real_lora_row_has_a_strength():
+    """The one column this package exists for."""
+    for case in _real_cases():
+        got, status = loras(case["workflow"])
+        if status == OK:
+            assert all(e["strength_model"] is not None for e in got)
