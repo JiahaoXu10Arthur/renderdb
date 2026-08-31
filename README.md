@@ -27,7 +27,7 @@ $ renderdb diff a.png b.png
   2 changes
 ```
 
-No dependencies, stdlib only. 61 tests, CI on Python 3.9, 3.11 and 3.13.
+No dependencies, stdlib only. 64 tests, CI on Python 3.9, 3.11 and 3.13.
 
 ## The one field that is actually missing elsewhere
 
