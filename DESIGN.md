@@ -124,14 +124,16 @@ enough to compare on.
 
 **Claims in the README are runnable.** Every console example matches real
 output. Change the output format and you must re-run the examples and update
-the README. This has been broken before: a debug print's truncated tail
-(`repr(t[-160:])` turning `red eyes` into `yes`) once ended up documented as a
-literal string the tool had collected.
+the README — and note what that costs here: `indexed 1603, skipped 5` and the
+`diff` output came off the corpus, not off a fixture, so re-running them needs
+the corpus back. Change the format only when you can.
 
-**Numbers are censuses, not samples.** Every statistic in the README comes
-from a full scan. An earlier version sampled 300 files and reported 89/6/4
-where the census said 85.6/8.0/4.9 — and the census took seconds. If you can
-count everything, count everything.
+**Numbers are censuses, not samples.** Every statistic in the README is a
+count over every file in the corpus, not a rate over a sample of it — 1,447
+`ok` and 156 `no_lora_nodes` across 1,603 renders, 15,376 LoRA rows. A scan
+that size takes seconds, so there is never a reason to estimate: sampling
+here would put a margin of error on the one column this package exists for.
+If you can count everything, count everything.
 
 **Two fixture kinds, and they catch different things.**
 
