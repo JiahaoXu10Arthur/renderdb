@@ -1,0 +1,9 @@
+# The wheel carries the package; the sdist carries what it takes to check it.
+# setuptools ships tests/*.py by default and nothing else under tests/, so the
+# JSON fixtures were left out and `pytest` on an unpacked sdist failed at
+# collection -- an sdist that looks like it contains its tests and does not.
+recursive-include tests *.json
+
+# The design notes are the part of these repos worth reading before changing
+# anything, so a source distribution that omits them is missing the reasoning.
+include DESIGN.md
