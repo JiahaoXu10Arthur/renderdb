@@ -190,10 +190,14 @@ it should be.
 
 ## Install
 
-Not on PyPI. From a clone:
+```console
+pip install renderdb
+```
+
+Or from a clone, to run the suite:
 
 ```console
-pip install .          # or -e ".[test]" to run the suite
+pip install -e ".[test]"
 pytest -q
 ```
 
