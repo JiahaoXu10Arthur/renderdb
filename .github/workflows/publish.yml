@@ -1,0 +1,52 @@
+name: publish
+# Trusted Publishing: PyPI verifies this workflow's OIDC identity, so there is
+# no API token to store, rotate, or leak. Configure the publisher once per
+# project at https://pypi.org/manage/account/publishing/ with owner
+# JiahaoXu10Arthur, this repository, workflow "publish.yml", no environment.
+#
+# Releasing is: git tag v0.1.0 && git push origin v0.1.0
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install build
+      - run: python -m build
+
+      # test.yml only ever runs against the working tree, which is how the
+      # first release candidate got an sdist whose fixtures were missing:
+      # tests/*.py shipped, tests/fixtures/*.json did not, and pytest died at
+      # collection. An artifact that contains a test it cannot run looks
+      # exactly like one that is complete. So test what is about to be
+      # uploaded, not what is on disk.
+      - name: Test the sdist, not the checkout
+        run: |
+          mkdir -p /tmp/sdist
+          tar xzf dist/*.tar.gz -C /tmp/sdist --strip-components=1
+          cd /tmp/sdist
+          pip install ".[test]"
+          pytest -q
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write        # the OIDC token; nothing else is needed
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
