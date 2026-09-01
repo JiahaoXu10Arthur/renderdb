@@ -663,3 +663,70 @@ def test_the_shipped_readers_raise_on_no_real_node():
             for predicate, reader in workflow.LORA_READERS:
                 if predicate(node):
                     reader(nid, node)
+
+
+def _broken_ztxt(key):
+    return (b"zTXt", key.encode() + b"\x00" + b"\x00" + b"not-actually-zlib")
+
+
+def _itxt(key, value):
+    return (b"iTXt", key.encode() + b"\x00" + b"\x00\x00" + b"\x00" + b"\x00"
+            + value.encode())
+
+
+def test_an_undecodable_prompt_chunk_is_not_reported_as_a_missing_one(tmp_path):
+    """Third copy of this walker, same defect as the two siblings. It costs
+    more here: build() catches WorkflowError, counts the file as skipped and
+    moves on, so the render is absent from the index and filed under a reason
+    that was invented."""
+    p = tmp_path / "x.png"
+    p.write_bytes(_png([_broken_ztxt("prompt")]))
+    with pytest.raises(WorkflowError) as e:
+        read_workflow(p)
+    msg = str(e.value)
+    assert "prompt" in msg
+    assert "has no embedded workflow" not in msg
+
+
+def test_one_broken_chunk_does_not_lose_a_readable_prompt(tmp_path):
+    p = tmp_path / "y.png"
+    p.write_bytes(_png([_broken_ztxt("junk"),
+                        (b"tEXt", b"prompt\x00" + json.dumps(wf()).encode())]))
+    assert read_workflow(p)["3"]["class_type"] == "KSampler"
+
+
+def test_a_prompt_in_an_itxt_chunk_is_read(tmp_path):
+    """No iTXt branch meant a prompt written there was never looked at, and
+    never-looked-at reports identically to never-there."""
+    p = tmp_path / "z.png"
+    p.write_bytes(_png([_itxt("prompt", json.dumps(wf()))]))
+    assert read_workflow(p)["3"]["class_type"] == "KSampler"
+
+
+def test_skip_reasons_group_by_cause_not_by_filename(tmp_path, capsys):
+    """The tally keyed on the error message, which opens with the filename, so
+    every skipped render became its own "reason". At the README's five skips
+    that is invisible; at a hundred the summary is useless and still looks like
+    a summary -- six lines of filenames read as six kinds of problem."""
+    import renderdb.__main__ as cli
+    for i in range(3):
+        (tmp_path / ("render_%05d.png" % i)).write_bytes(_png([]))
+    cli.main(["build", str(tmp_path), "--db", str(tmp_path / "x.db")])
+    out = capsys.readouterr().out
+    assert "indexed 0, skipped 3" in out
+    lines = [l for l in out.splitlines() if l.strip().startswith("skipped")]
+    assert len(lines) == 1, lines
+    assert "skipped     3" in lines[0]
+    assert "render_0" not in lines[0]
+
+
+def test_the_skip_summary_says_how_many_reasons_it_did_not_show(
+        tmp_path, capsys, monkeypatch):
+    """A cap that truncates without saying so reads as complete coverage."""
+    import renderdb.__main__ as cli
+    monkeypatch.setattr(cli, "_MAX_SKIP_REASONS", 1)
+    (tmp_path / "a.png").write_bytes(_png([]))
+    (tmp_path / "b.png").write_bytes(b"nope")
+    cli.main(["build", str(tmp_path), "--db", str(tmp_path / "x.db")])
+    out = capsys.readouterr().out
+    assert "more" in out

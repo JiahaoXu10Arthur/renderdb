@@ -28,6 +28,25 @@ def _fail(msg: str, *extra: str) -> int:
     return 3
 
 
+#: How many distinct skip reasons the build summary prints. Whatever it drops
+#: is counted on a following line: a cap that truncates in silence reads as
+#: complete coverage, which is the one thing a diagnostic must not do.
+_MAX_SKIP_REASONS = 6
+
+
+def _skip_key(png, err) -> str:
+    """Group a skip by its cause.
+
+    The message opens with the filename, so keying on it whole made every
+    skipped render its own reason -- and the summary then showed six filenames,
+    which an operator reads as six kinds of problem. The name is dropped rather
+    than placeheld: in a tally the row already means "renders that failed this
+    way", so repeating a token for the file adds nothing to read past.
+    """
+    text = str(err).replace(Path(png).name, "").split(" (")[0]
+    return text.strip(" :").strip()[:70]
+
+
 def _opt(args, name, default=None):
     return args[args.index(name) + 1] if name in args and \
         args.index(name) + 1 < len(args) else default
@@ -43,13 +62,18 @@ def _cmd_build(args) -> int:
     reasons = {}
 
     def note(png, err):
-        key = str(err).split(" (")[0][:70]
+        key = _skip_key(png, err)
         reasons[key] = reasons.get(key, 0) + 1
 
     n, skipped = build(root, db, on_error=note)
     print("indexed %d, skipped %d -> %s" % (n, skipped, db))
-    for why, count in sorted(reasons.items(), key=lambda kv: -kv[1])[:6]:
+    ranked = sorted(reasons.items(), key=lambda kv: -kv[1])
+    for why, count in ranked[:_MAX_SKIP_REASONS]:
         print("  skipped %5d  %s" % (count, why))
+    if len(ranked) > _MAX_SKIP_REASONS:
+        rest = ranked[_MAX_SKIP_REASONS:]
+        print("  ... and %d more reasons covering %d renders"
+              % (len(rest), sum(c for _, c in rest)))
     return 0
 
 
