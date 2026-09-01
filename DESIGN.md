@@ -103,6 +103,46 @@ worked**. A synthetic test cannot catch those, because you only write a
 synthetic case for a shape you already know about. That is what
 `tests/fixtures/real_shapes.json` is for.
 
+## Decision: unread and undecodable are not the same as absent, in the walker too
+
+`lora_status` keeps that distinction for LoRA nodes. The PNG chunk walker one
+layer below was collapsing it, twice:
+
+- A chunk that failed to decompress was skipped and left no trace, so the file
+  reported `has no embedded workflow (chunks: none)` with the chunk sitting
+  right there. It now enters the result as `_Undecodable(why)`, and
+  `read_workflow` says so and quotes the zlib error. Skipping a broken
+  *unrelated* chunk still costs nothing, and a test pins that.
+- There was **no `iTXt` branch**, so a prompt written there was never looked at.
+  Never-looked-at reports identically to never-there.
+
+It costs more here than in the sibling packages, which are gates: `build()`
+catches `WorkflowError`, counts the render skipped and moves on, so the render
+is missing from the index *and* filed under a reason nobody measured.
+
+## Decision: the skip summary groups by cause, and admits what it dropped
+
+The build tally keyed on the error message, which opens with the filename, so
+every skipped render became its own "reason" and the six lines printed were six
+filenames. At the five skips in the README this is invisible. At a hundred the
+summary is useless and still looks like a summary.
+
+Skips are keyed by cause now (`_skip_key` replaces the filename), and anything
+past `_MAX_SKIP_REASONS` is reported as a trailing count rather than dropped. A
+cap that truncates in silence reads as complete coverage.
+
+## Known limitation: a model name wired in from upstream is not resolved
+
+`models()` reads literal string inputs, so a `ckpt_name` arriving as a link
+leaves the column `NULL`. That is the right shape per "refuse per field" — the
+value is genuinely unread — but note what it is *not*: there is no status
+column for model fields, so `NULL` here does not distinguish "wired in and not
+followed" from "this graph names no checkpoint". Only LoRA gets that
+distinction, deliberately, and this is the edge where you would feel its
+absence. The module and README claims are careful about this already: both say
+the *PNG* carries every model, and that this package stores what it can
+resolve.
+
 ## Rejected
 
 **A tag table.** The prototype split prompts on commas into 42,373 rows over

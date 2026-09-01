@@ -78,6 +78,20 @@ _ADAPTER_WORDS = ("lora", "lycoris", "loha", "lokr", "locon", "dora", "lyco")
 _MAX_DEPTH = 24
 
 
+#: A chunk that is present but did not decode. It stands in the result where
+#: the text would have been, so "I could not decompress your prompt" cannot
+#: arrive as "this image has no prompt" -- the same distinction ``lora_status``
+#: exists to keep, one layer lower down.
+class _Undecodable(object):
+    __slots__ = ("why",)
+
+    def __init__(self, why: str):
+        self.why = why
+
+    def __repr__(self) -> str:
+        return "<undecodable: %s>" % self.why
+
+
 class WorkflowError(Exception):
     """The PNG carried no readable ComfyUI workflow."""
 
@@ -110,7 +124,31 @@ def read_text_chunks(png) -> Dict[str, str]:
                 k, _, rest = body.partition(b"\x00")
                 out[k.decode("latin-1")] = zlib.decompress(
                     rest[1:]).decode("utf-8", "replace")
-        except Exception:
+            elif ctype == b"iTXt":
+                # There was no iTXt branch, so a prompt written there was
+                # never looked at -- and an unread chunk reports exactly like
+                # an absent one, which is the whole thing this package is
+                # organised to avoid.
+                k, _, rest = body.partition(b"\x00")
+                flag = rest[0] if rest else 0
+                rest = rest[2:]                        # compression flag, method
+                _, _, rest = rest.partition(b"\x00")   # language tag
+                _, _, rest = rest.partition(b"\x00")   # translated keyword
+                out[k.decode("latin-1")] = (
+                    zlib.decompress(rest) if flag else rest
+                ).decode("utf-8", "replace")
+        except Exception as exc:
+            # A malformed chunk must not abandon the file, and must not vanish
+            # from it either. Leaving no trace made an undecodable prompt read
+            # as "no embedded workflow" -- and here that is worse than a bad
+            # message, because build() then counts the render as skipped and
+            # files it under a reason nobody measured.
+            try:
+                k = body.partition(b"\x00")[0].decode("latin-1")
+            except Exception:
+                continue
+            out.setdefault(k, _Undecodable(
+                "%s chunk: %s" % (ctype.decode("latin-1"), exc)))
             continue
     return out
 
@@ -119,6 +157,10 @@ def read_workflow(png) -> dict:
     """The API graph, which is what ran. Not the editor's copy."""
     chunks = read_text_chunks(png)
     raw = chunks.get("prompt")
+    if isinstance(raw, _Undecodable):
+        raise WorkflowError(
+            "%s: prompt chunk did not decode (%s) -- the workflow is there "
+            "and unreadable, not absent" % (Path(png).name, raw.why))
     if not raw:
         have = ", ".join(sorted(chunks)) or "none"
         raise WorkflowError("%s has no embedded workflow (chunks: %s)"
